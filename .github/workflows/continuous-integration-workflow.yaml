@@ -106,7 +106,6 @@ jobs:
       - name: Verify with Kani
         uses: model-checking/kani-github-action@02764e122079011adaf31e7d0630a8841d277507
         with:
-          working-directory: prost
           args: |
             --tests -p prost-types --default-unwind 3 \
             --harness "tests::check_timestamp_roundtrip_via_system_time"
