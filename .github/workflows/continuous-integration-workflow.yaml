@@ -96,6 +96,21 @@ jobs:
           command: test
           args: --no-default-features
 
+  kani:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Verify with Kani
+        uses: model-checking/kani-github-action@02764e1
+        with:
+          working-directory: prost
+          args: --tests -p prost-types --default-unwind 3 \
+          --harness "tests::check_timestamp_roundtrip_via_system_time"
+          enable-propproof: true
+
   no-std:
     runs-on: ubuntu-latest
     steps:
