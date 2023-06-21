@@ -1792,3 +1792,35 @@ mod test {
         (Vec<u8>, bytes)
     ]);
 }
+
+#[cfg(kani)]
+mod kani_proofs {
+    use super::*;
+
+    #[kani::proof]
+    fn decode_encode_roundtrip() {
+        let mut buf: Vec<u8> = vec![0; 20];
+
+        let value: u64 = kani::any();
+        encode_varint(value, &mut buf);
+        let decoded_value = decode_varint(&mut buf.as_ref()).unwrap();
+
+        assert_eq!(value, decoded_value);
+    }
+}
+
+#[cfg(test)]
+mod kani_test {
+    use super::*;
+
+    #[test]
+    fn decode_encode_roundtrip() {
+        let mut buf: Vec<u8> = vec![0; 20];
+
+        let value: u64 = 16384u64;
+        encode_varint(value, &mut buf);
+        let decoded_value = decode_varint(&mut buf.as_ref()).unwrap();
+
+        assert_eq!(value, decoded_value);
+    }
+}
